@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentiment Analysis Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ── Header ───────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="36" height="36" rx="10" fill="url(#grad)"/>
+            <path d="M10 24 Q18 12 26 24" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="13" cy="20" r="2" fill="white" opacity="0.7"/>
+            <circle cx="23" cy="20" r="2" fill="white" opacity="0.7"/>
+            <defs>
+              <linearGradient id="grad" x1="0" y1="0" x2="36" y2="36">
+                <stop offset="0%" stop-color="#6366f1"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span class="logo-text">SentimentIQ</span>
+      </div>
+      <div class="header-right">
+        <span class="model-badge" id="modelBadge">
+          <span class="badge-dot"></span>
+          <span class="badge-label">Loading model…</span>
+        </span>
+        <span class="header-tag">AI-Powered</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Hero ─────────────────────────────────────────────────── -->
+  <section class="hero">
+    <h1>Sentiment Analysis <span class="gradient-text">Dashboard</span></h1>
+    <p class="hero-sub">Understand the emotional tone of any text in seconds — powered by a fine-tuned transformer model.</p>
+    <div class="tab-bar">
+      <button class="tab active" data-tab="single">Single Text</button>
+      <button class="tab" data-tab="bulk">Bulk Upload</button>
+    </div>
+  </section>
+
+  <main class="main-content">
+
+    <!-- ── Single Analysis ──────────────────────────────────────── -->
+    <div id="tabSingle" class="tab-panel active">
+
+      <!-- Input Card -->
+      <div class="card input-card">
+        <div class="card-header">
+          <h2>
+            <svg class="card-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0h8v12H6V4z" clip-rule="evenodd"/></svg>
+            Text Input
+          </h2>
+          <span class="char-count" id="charCount">0 / 5000</span>
+        </div>
+        <textarea
+          id="textInput"
+          class="text-area"
+          placeholder="Paste or type your text here… (reviews, tweets, feedback, articles)"
+          maxlength="5000"
+          rows="7"
+        ></textarea>
+        <div class="input-actions">
+          <button class="btn btn-secondary" id="clearBtn">Clear</button>
+          <button class="btn btn-primary" id="analyzeBtn">
+            <span class="btn-icon">✦</span>
+            Analyze Sentiment
+          </button>
+        </div>
+      </div>
+
+      <!-- Result + Report Row -->
+      <div class="result-row" id="resultRow" style="display:none">
+
+        <!-- Sentiment Result Card -->
+        <div class="card result-card" id="resultCard">
+          <div class="card-header">
+            <h2>
+              <svg class="card-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>
+              Result
+            </h2>
+          </div>
+          <div class="sentiment-display" id="sentimentDisplay">
+            <div class="sentiment-emoji" id="sentimentEmoji"></div>
+            <div class="sentiment-label" id="sentimentLabel"></div>
+            <div class="sentiment-conf" id="sentimentConf"></div>
+          </div>
+          <div class="score-bars" id="scoreBars"></div>
+        </div>
+
+        <!-- Report Card -->
+        <div class="card report-card" id="reportCard">
+          <div class="card-header">
+            <h2>
+              <svg class="card-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>
+              Report
+            </h2>
+          </div>
+          <div class="report-content" id="reportContent"></div>
+        </div>
+
+      </div>
+
+      <!-- Loading overlay (inside single tab) -->
+      <div class="loading-overlay" id="loadingOverlay" style="display:none">
+        <div class="spinner"></div>
+        <p>Analyzing sentiment…</p>
+      </div>
+
+      <!-- Error message -->
+      <div class="error-banner" id="errorBanner" style="display:none">
+        <span class="error-icon">⚠</span>
+        <span id="errorText"></span>
+      </div>
+
+    </div>
+
+    <!-- ── Bulk Upload ───────────────────────────────────────────── -->
+    <div id="tabBulk" class="tab-panel">
+
+      <div class="card upload-card">
+        <div class="card-header">
+          <h2>
+            <svg class="card-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+            Upload File
+          </h2>
+        </div>
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-icon">
+            <svg viewBox="0 0 48 48" fill="none"><path d="M24 4v28M12 20l12-16 12 16" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="38" width="36" height="4" rx="2" fill="#6366f1" opacity="0.3"/></svg>
+          </div>
+          <p class="drop-text">Drag & drop a <strong>.txt</strong> or <strong>.csv</strong> file here</p>
+          <p class="drop-sub">or</p>
+          <label class="btn btn-outline" for="fileInput">Browse Files</label>
+          <input type="file" id="fileInput" accept=".txt,.csv" style="display:none" onchange="handleFileSelect(this)" />
+          <p class="drop-note">Max 200 rows · .txt (one entry per line) · .csv (requires a "text" column)</p>
+        </div>
+        <div class="file-info" id="fileInfo" style="display:none">
+          <span class="file-name" id="fileName"></span>
+          <button class="btn btn-primary" id="bulkAnalyzeBtn">
+            <span class="btn-icon">✦</span> Analyze All
+          </button>
+        </div>
+        <div class="loading-overlay" id="bulkLoadingOverlay" style="display:none">
+          <div class="spinner"></div>
+          <p>Analyzing entries…</p>
+        </div>
+        <div class="error-banner" id="bulkErrorBanner" style="display:none">
+          <span class="error-icon">⚠</span>
+          <span id="bulkErrorText"></span>
+        </div>
+      </div>
+
+      <!-- Bulk Summary -->
+      <div class="card" id="bulkSummaryCard" style="display:none">
+        <div class="card-header"><h2>Summary</h2></div>
+        <div class="bulk-summary" id="bulkSummary"></div>
+      </div>
+
+      <!-- Bulk Results Table -->
+      <div class="card" id="bulkTableCard" style="display:none">
+        <div class="card-header">
+          <h2>Results</h2>
+          <button class="btn btn-outline btn-sm" id="exportBtn">Export CSV</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="results-table" id="resultsTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Text Preview</th>
+                <th>Sentiment</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ── Footer ────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <p>Powered by AI Sentiment Model &nbsp;·&nbsp; Built with HuggingFace Transformers &nbsp;·&nbsp; SentimentIQ</p>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
