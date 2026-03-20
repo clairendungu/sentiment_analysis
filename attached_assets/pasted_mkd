@@ -1,0 +1,86 @@
+You are an expert full-stack developer and UI/UX designer.
+
+I have already built and uploaded a fully functional sentiment analysis model (Python-based). Your task is to build a polished, production-ready web application that uses this model to analyze text sentiment and generate insightful reports.
+
+## Core Requirements
+
+### 1. Backend
+
+* Use Python (Flask or FastAPI preferred)
+* Load and use the existing sentiment analysis model from the project files
+* Create an API endpoint:
+
+  * POST /analyze
+  * Input: user text
+  * Output: sentiment (Positive, Negative, Neutral) + confidence score
+
+### 2. Frontend
+
+* Build a modern, clean UI using HTML, CSS, and JavaScript (or React if preferred)
+* Design should be professional and responsive
+* Include:
+
+  * Text input box (for user to paste or type text)
+  * "Analyze Sentiment" button
+  * Display results clearly
+
+### 3. Features
+
+* Show sentiment result with:
+
+  * Label (Positive, Negative, Neutral)
+  * Confidence score (percentage)
+* Add visual indicators:
+
+  * Green for positive
+  * Red for negative
+  * Gray for neutral
+* Include loading animation while processing
+* Add error handling for empty input
+
+### 4. Advanced Features (IMPORTANT)
+
+* Generate a simple sentiment report:
+
+  * Summary of the text sentiment
+  * Key phrases (if possible)
+* Allow users to upload a text file (.txt or .csv) and analyze multiple entries
+* Display results in a table format for bulk input
+
+### 5. UI/UX Design
+
+* Clean dashboard-style layout
+* Header: "Sentiment Analysis Dashboard"
+* Sections:
+
+  * Input section
+  * Results section
+  * Report section
+* Use cards, spacing, and modern styling (rounded corners, shadows)
+
+### 6. Project Structure
+
+Organize files clearly:
+
+* /backend (model + API)
+* /frontend (UI files)
+* app.py or main.py
+* requirements.txt
+
+### 7. Deployment Ready
+
+* Ensure the app runs properly on Replit
+* Include instructions in comments on how to run it
+* Use environment variables if needed
+
+### 8. Extra Polish (Important)
+
+* Add a simple logo or icon
+* Include a footer with "Powered by AI Sentiment Model"
+* Make the UI visually appealing and professional
+
+## Goal
+
+The final product should look like a real SaaS tool that can be added to a developer portfolio and impress recruiters.
+
+Do not just create a basic app — make it polished, interactive, and professional.
